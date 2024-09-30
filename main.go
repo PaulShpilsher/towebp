@@ -29,9 +29,11 @@ func main() {
 	}
 
 	webpanim := webpanimation.NewWebpAnimation(gif.Config.Width, gif.Config.Height, gif.LoopCount)
+	defer webpanim.ReleaseMemory()
+
 	webpanim.WebPAnimEncoderOptions.SetKmin(9)
 	webpanim.WebPAnimEncoderOptions.SetKmax(17)
-	defer webpanim.ReleaseMemory() // dont forget call this or you will have memory leaks
+
 	webpConfig := webpanimation.NewWebpConfig()
 	webpConfig.SetLossless(0)
 
