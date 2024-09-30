@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"image/gif"
-	"io/ioutil"
 	"log"
 	"os"
 
@@ -11,8 +10,16 @@ import (
 )
 
 func main() {
+	if len(os.Args) < 3 {
+		log.Println("Usage: towebp <input_image_file> <output_webp_file>")
+		return
+	}
+
+	srcPath := os.Args[1]
+	webpPath := os.Args[2]
+
 	var buf bytes.Buffer
-	gifFile, err := os.Open("animated_gif.gif")
+	gifFile, err := os.Open(srcPath)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -48,5 +55,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	ioutil.WriteFile("animated_gif.webp", buf.Bytes(), 0777)
+	os.WriteFile(webpPath, buf.Bytes(), 0777)
+
+	log.Printf("Successfully created %s file", webpPath)
 }
