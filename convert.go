@@ -11,16 +11,6 @@ import (
 	giftowebp "github.com/sizeofint/gif-to-webp"
 )
 
-const (
-	Invalid = iota
-	Jpeg
-	Png
-	Gif
-	GifAnimated
-	Webp
-	WepAnimated
-)
-
 // detectImageType detects the image type from the image bytes
 func detectImageType(imageData []byte) (string, error) {
 	if bytes.HasPrefix(imageData, []byte{0x47, 0x49, 0x46}) {
@@ -35,7 +25,7 @@ func detectImageType(imageData []byte) (string, error) {
 	return "", fmt.Errorf("unsupported image format")
 }
 
-func convert(imageData []byte) ([]byte, error) {
+func convertToWebp(imageData []byte) ([]byte, error) {
 
 	imageType, err := detectImageType(imageData)
 	if err != nil {
@@ -48,10 +38,6 @@ func convert(imageData []byte) ([]byte, error) {
 	}
 
 	if imageType == "gif" {
-		// img, err := gif.DecodeAll(bytes.NewReader(imageData))
-		// if err != nil {
-		// 	return nil, err // unsupported format
-		// }
 
 		converter := giftowebp.NewConverter()
 		converter.LoopCompatibility = false
@@ -80,11 +66,11 @@ func convert(imageData []byte) ([]byte, error) {
 	}
 
 	// Resize the image to ensure the max-width or max-height is 800px
-	const maxSize = 800
-	bounds := img.Bounds()
-	if bounds.Dx() > maxSize || bounds.Dy() > maxSize {
-		img = imaging.Fit(img, maxSize, maxSize, imaging.Lanczos)
-	}
+	// const maxSize = 800
+	// bounds := img.Bounds()
+	// if bounds.Dx() > maxSize || bounds.Dy() > maxSize {
+	// 	img = imaging.Fit(img, maxSize, maxSize, imaging.Lanczos)
+	// }
 
 	var buf bytes.Buffer
 	// Create a WEBP encoder
